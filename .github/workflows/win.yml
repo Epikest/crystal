@@ -3,7 +3,7 @@ name: Windows CI
 on: 
   push:
     branches:
-    - main
+    - master
     paths:
       - 'src/**'
       - 'bin/**'
