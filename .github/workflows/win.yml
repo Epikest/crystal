@@ -228,7 +228,7 @@ jobs:
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
         with:
-          name: crystal
+          name: crystal-release
           path: build
 
       - name: Restore LLVM
@@ -306,3 +306,30 @@ jobs:
         with:
           name: crystal-installer
           path: etc/win-ci/Output/crystal-setup.exe
+  release:
+    name: Get commit SHA and tag the current code snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Tag repo with commit SHA
+        run: |
+          git tag ${{github.sha}}
+          git push origin ${{github.sha}}
+            - name: Release
+      - name: Download Crystal executable
+        uses: actions/download-artifact@v3
+        with:
+          name: crystal-release
+          path: "release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.zip"
+      - name: Download Crystal installer
+        uses: actions/download-artifact@v3
+        with:
+          name: crystal-installer
+          path: "release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.exe"
+      - name: Create release with artifacts
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            release/crystal-release.zip
+            LICENSE
