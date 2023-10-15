@@ -277,7 +277,7 @@ jobs:
   x86_64-windows-installer:
     if: github.repository_owner == 'crystal-lang' && (startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/ci/'))
     runs-on: windows-2022
-    needs: [x86_64-windows-release]
+    needs: [x86_64-windows-test]
     steps:
       - name: Disable CRLF line ending substitution
         run: |
