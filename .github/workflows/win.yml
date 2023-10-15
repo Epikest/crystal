@@ -208,7 +208,7 @@ jobs:
     needs: [x86_64-windows-libs, x86_64-windows-dlls, x86_64-windows-llvm]
     uses: ./.github/workflows/win_build_portable.yml
     with:
-      release: false
+      release: true
       llvm_version: "17.0.2"
 
   x86_64-windows-test:
