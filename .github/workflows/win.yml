@@ -33,6 +33,11 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --tags origin
+          git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 
       - name: Cache libraries
         id: cache-libs
@@ -105,6 +110,11 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --tags origin
+          git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 
       - name: Cache libraries
         id: cache-dlls
@@ -235,6 +245,11 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --tags origin
+          git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
@@ -284,6 +299,11 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --tags origin
+          git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
@@ -320,19 +340,28 @@ jobs:
     runs-on: ubuntu-latest
     needs: [x86_64-windows-installer]
     steps:
+      - name: Download Crystal source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --tags origin
+          echo "LATEST=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+          git checkout ${{env.LATEST}}
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
         with:
           name: crystal-release
-          path: "release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.zip"
+          path: "release/crystal-${{env.LATEST}}-windows-x86_64-msvc-unsupported.zip"
       - name: Download Crystal installer
         uses: actions/download-artifact@v3
         with:
           name: crystal-installer
-          path: "release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.exe"
+          path: "release/crystal-${{env.LATEST}}-windows-x86_64-msvc-unsupported.exe"
+      - name: Get latest release tag
+        run: LATEST=$(git describe --tags `git rev-list --tags --max-count=1`)
       - name: Create release with artifacts
-        uses: softprops/action-gh-release@v1
+      - uses: ncipollo/release-action@v1
         with:
-          files: |
-            release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.zip
-            release/crystal-${{github.sha}}-windows-x86_64-msvc-unsupported.exe
+          artifacts: "release/*"
+          body: "https://github.com/crystal-lang/crystal/releases/tag/${{env.LATEST}}"
