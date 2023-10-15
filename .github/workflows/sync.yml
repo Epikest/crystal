@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - run: gh repo sync
+    - run: |
+        gh repo sync
+        git fetch --tags https://github.com/crystal-lang/crystal
+    
       env:
         GH_TOKEN: ${{ github.token }}
     - uses: gautamkrishnar/keepalive-workflow@v1
