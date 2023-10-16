@@ -31,8 +31,8 @@ jobs:
         with:
           repository: crystal-lang/crystal
           releases-only: true
-      - name: "Store latest Crystal release tag in ENV"
-        run: echo "RELEASE=${{ steps.crystal-latest.outputs.tag }}" >> $GITHUB_ENV
+    outputs:
+      latest: ${{ steps.crystal-latest.outputs.tag }}
 
   x86_64-windows-libs:
     runs-on: windows-2022
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE }}
+          ref: refs/tags/${{ needs.setup.outputs.latest }}
 
       - name: Cache libraries
         id: cache-libs
@@ -125,7 +125,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE }}
+          ref: refs/tags/${{ needs.setup.outputs.latest }}
 
       - name: Cache libraries
         id: cache-dlls
@@ -246,7 +246,7 @@ jobs:
 
   x86_64-windows-test:
     runs-on: windows-2022
-    needs: [x86_64-windows-release]
+    needs: [setup, x86_64-windows-release]
     steps:
       - name: Disable CRLF line ending substitution
         run: |
@@ -259,7 +259,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE }}
+          ref: refs/tags/${{ needs.setup.outputs.latest }}
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
@@ -293,7 +293,7 @@ jobs:
         run: make -f Makefile.win samples
 
   x86_64-windows-release:
-    needs: [x86_64-windows-libs, x86_64-windows-dlls, x86_64-windows-llvm]
+    needs: [setup, x86_64-windows-libs, x86_64-windows-dlls, x86_64-windows-llvm]
     uses: ./.github/workflows/win_build_portable.yml
     with:
       release: true
@@ -301,7 +301,7 @@ jobs:
 
   x86_64-windows-installer:
     runs-on: windows-2022
-    needs: [x86_64-windows-release]
+    needs: [setup, x86_64-windows-release]
     steps:
       - name: Disable CRLF line ending substitution
         run: |
@@ -311,7 +311,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE }}
+          ref: refs/tags/${{ needs.setup.outputs.latest }}
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
@@ -346,25 +346,25 @@ jobs:
           path: etc/win-ci/Output/crystal-setup.exe
   release:
     runs-on: ubuntu-latest
-    needs: [x86_64-windows-installer]
+    needs: [setup, x86_64-windows-installer]
     steps:
       - name: Download Crystal source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE }}
+          ref: refs/tags/${{ needs.setup.outputs.latest }}
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
         with:
           name: crystal-release
-          path: "release/crystal-${{ env.RELEASE }}-windows-x86_64-msvc-unsupported.zip"
+          path: "release/crystal-${{ needs.setup.outputs.latest }}-windows-x86_64-msvc-unsupported.zip"
       - name: Download Crystal installer
         uses: actions/download-artifact@v3
         with:
           name: crystal-installer
-          path: "release/crystal-${{ env.RELEASE }}-windows-x86_64-msvc-unsupported.exe"
+          path: "release/crystal-${{ needs.setup.outputs.latest }}-windows-x86_64-msvc-unsupported.exe"
       - name: Create release with artifacts
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "release/*"
-          body: "https://github.com/crystal-lang/crystal/releases/tag/${{ env.RELEASE }}"
+          artifacts: "release/**"
+          body: "https://github.com/crystal-lang/crystal/releases/tag/${{ needs.setup.outputs.latest }}"
