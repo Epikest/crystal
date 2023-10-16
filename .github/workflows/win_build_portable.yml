@@ -11,8 +11,20 @@ on:
         type: string
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest Crystal release tag
+        id: crystal-latest
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: crystal-lang/crystal
+          releases-only: true
+    outputs:
+      release: ${{ steps.crystal-latest.outputs.tag }}
   build:
     runs-on: windows-2022
+    needs: [setup]
     steps:
       - name: Disable CRLF line ending substitution
         run: |
@@ -28,6 +40,9 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/tags/${{ needs.setup.outputs.release }}
 
       - name: Restore libraries
         uses: actions/cache/restore@v3
