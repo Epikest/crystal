@@ -17,7 +17,8 @@ jobs:
     - run: |
         gh repo sync
         git fetch --tags https://github.com/crystal-lang/crystal
-    
+        git push --tags
+
       env:
         GH_TOKEN: ${{ github.token }}
     - uses: gautamkrishnar/keepalive-workflow@v1
