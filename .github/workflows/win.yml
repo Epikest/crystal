@@ -308,6 +308,7 @@ jobs:
     with:
       release: true
       llvm_version: "17.0.2"
+      release_version: ${{ needs.setup.outputs.release }}
 
   x86_64-windows-installer:
     runs-on: windows-2022

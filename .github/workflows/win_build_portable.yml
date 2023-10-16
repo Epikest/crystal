@@ -9,22 +9,13 @@ on:
       llvm_version:
         required: true
         type: string
+      release_version:
+        required: true
+        type: string
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get latest Crystal release tag
-        id: crystal-latest
-        uses: oprypin/find-latest-tag@v1
-        with:
-          repository: crystal-lang/crystal
-          releases-only: true
-    outputs:
-      release: ${{ steps.crystal-latest.outputs.tag }}
   build:
     runs-on: windows-2022
-    needs: [setup]
     steps:
       - name: Disable CRLF line ending substitution
         run: |
@@ -36,13 +27,13 @@ jobs:
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: "1.9.2"
+          crystal: latest
 
       - name: Download Crystal source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ needs.setup.outputs.release }}
+          ref: refs/tags/${{ inputs.release_version }}
 
       - name: Restore libraries
         uses: actions/cache/restore@v3
