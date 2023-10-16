@@ -8,6 +8,7 @@ on:
       - 'src/**'
       - 'bin/**'
       - 'lib/**'
+      - 'samples/**'
       - 'spec/**'
       - 'README.md'
       - '.github/workflows/win.yml'
@@ -347,21 +348,21 @@ jobs:
       - run: |
           git fetch --tags origin
           echo "LATEST=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
-          git checkout ${{env.LATEST}}
+          git checkout ${{ env.LATEST }}
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
         with:
           name: crystal-release
-          path: "release/crystal-${{env.LATEST}}-windows-x86_64-msvc-unsupported.zip"
+          path: "release/crystal-${{ env.LATEST }}-windows-x86_64-msvc-unsupported.zip"
       - name: Download Crystal installer
         uses: actions/download-artifact@v3
         with:
           name: crystal-installer
-          path: "release/crystal-${{env.LATEST}}-windows-x86_64-msvc-unsupported.exe"
+          path: "release/crystal-${{ env.LATEST }}-windows-x86_64-msvc-unsupported.exe"
       - name: Get latest release tag
         run: LATEST=$(git describe --tags `git rev-list --tags --max-count=1`)
       - name: Create release with artifacts
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "release/*"
-          body: "https://github.com/crystal-lang/crystal/releases/tag/${{env.LATEST}}"
+          body: "https://github.com/crystal-lang/crystal/releases/tag/${{ env.LATEST }}"
