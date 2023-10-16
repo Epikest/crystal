@@ -32,7 +32,7 @@ jobs:
           repository: crystal-lang/crystal
           releases-only: true
       - name: "Store latest Crystal release tag in ENV"
-        run: echo "LATEST=${{ steps.crystal-latest.outputs.tag }}"" >> $GITHUB_ENV
+        run: echo "LATEST=${{ steps.crystal-latest.outputs.tag }}" >> $GITHUB_ENV
 
   x86_64-windows-libs:
     runs-on: windows-2022
