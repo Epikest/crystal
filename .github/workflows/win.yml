@@ -374,8 +374,9 @@ jobs:
         with:
           name: crystal-installer
           path: artifacts/crystal-installer
-      - name: Prepare release binary upload
+      - name: Prepare release
         run: |
+          awk '/^#[[:space:]]/ {if(p)exit; p=1} p' CHANGELOG.md | tail -n +3 | head -n -1 > RELEASE.md
           mkdir release
           cd artifacts/crystal-release
           zip -r ../../release/crystal-${{ needs.setup.outputs.release }}-windows-x86_64-msvc-unsupported.zip .
@@ -385,5 +386,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "release/**"
-          body: "https://github.com/crystal-lang/crystal/releases/tag/${{ needs.setup.outputs.release }}"
+          bodyFile: "RELEASE.md"
           tag: ${{ needs.setup.outputs.release }}
