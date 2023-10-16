@@ -379,3 +379,4 @@ jobs:
         with:
           artifacts: "release/**"
           body: "https://github.com/crystal-lang/crystal/releases/tag/${{ needs.setup.outputs.release }}"
+          tag: ${{ needs.setup.outputs.release }}
