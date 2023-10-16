@@ -368,12 +368,19 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: crystal-release
-          path: "release/crystal-${{ needs.setup.outputs.release }}-windows-x86_64-msvc-unsupported.zip"
+          path: artifacts/crystal-release
       - name: Download Crystal installer
         uses: actions/download-artifact@v3
         with:
           name: crystal-installer
-          path: "release/crystal-${{ needs.setup.outputs.release }}-windows-x86_64-msvc-unsupported.exe"
+          path: artifacts/crystal-installer
+      - name: Prepare release binary upload
+        run: |
+          mkdir release
+          cd artifacts/crystal-release
+          zip -r ../../release/crystal-${{ needs.setup.outputs.release }}-windows-x86_64-msvc-unsupported.zip .
+          cd ..
+          mv crystal-installer/crystal-setup.exe ../release/crystal-${{ needs.setup.outputs.release }}-windows-x86_64-msvc-unsupported.exe
       - name: Create release with artifacts
         uses: ncipollo/release-action@v1
         with:
