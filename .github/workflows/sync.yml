@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
-        gh repo sync
+        gh repo sync epikest/crystal
         git fetch --tags https://github.com/crystal-lang/crystal
         git push --tags
 
