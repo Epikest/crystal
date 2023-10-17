@@ -28,6 +28,8 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Restore libraries
         uses: actions/cache/restore@v3
