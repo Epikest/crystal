@@ -1,9 +1,6 @@
 name: Windows CI Nightly
 
-on: 
-  push:
-    branches:
-    - master
+on: [push, pull_request]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,6 +22,8 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Cache libraries
         id: cache-libs
@@ -97,6 +96,8 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Cache libraries
         id: cache-dlls
@@ -227,6 +228,8 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
@@ -276,6 +279,8 @@ jobs:
 
       - name: Download Crystal source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download Crystal executable
         uses: actions/download-artifact@v3
