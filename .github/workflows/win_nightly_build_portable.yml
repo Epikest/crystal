@@ -1,4 +1,4 @@
-name: Windows CI / Build Portable Package Nightly
+name: Windows CI Nightly / Build Portable Package
 
 on:
   workflow_call:
