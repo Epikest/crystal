@@ -5,14 +5,15 @@ on:
     branches:
     - master
     paths:
-      - 'src/**'
+      - '.github/workflows/win.yml'
+      - '.github/workflows/win_build_portable.yml'
       - 'bin/**'
       - 'lib/**'
       - 'samples/**'
       - 'spec/**'
+      - 'src/**'
       - 'README.md'
-      - '.github/workflows/win.yml'
-      - '.github/workflows/win_build_portable.yml'
+      - 'Makefile.win'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
