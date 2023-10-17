@@ -264,7 +264,7 @@ jobs:
 
   x86_64-windows-release:
     needs: [x86_64-windows-libs, x86_64-windows-dlls, x86_64-windows-llvm]
-    uses: ./.github/workflows/win_build_portable_nightly.yml
+    uses: ./.github/workflows/win_nightly_build_portable.yml
     with:
       release: true
       llvm_version: "17.0.2"
