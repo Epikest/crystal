@@ -1649,6 +1649,11 @@ require "./repl"
         pop_values: [current_context : Void*, new_context : Void*],
         code:       swapcontext(current_context, new_context),
       },
+      interpreter_fiber_resumable: {
+        pop_values: [context : Void*],
+        push:       true,
+        code:       fiber_resumable(context),
+      },
 
       {% if flag?(:bits64) %}
         interpreter_intrinsics_memcpy: {
@@ -1836,6 +1841,16 @@ require "./repl"
         pop_values: [value : Float64],
         push:       true,
         code:       LibM.floor_f64(value),
+      },
+      libm_fma_f32: {
+        pop_values: [value1 : Float32, value2 : Float32, value3 : Float32],
+        push:       true,
+        code:       LibM.fma_f32(value1, value2, value3),
+      },
+      libm_fma_f64: {
+        pop_values: [value1 : Float64, value2 : Float64, value3 : Float64],
+        push:       true,
+        code:       LibM.fma_f64(value1, value2, value3),
       },
       libm_log_f32: {
         pop_values: [value : Float32],

@@ -402,6 +402,9 @@ class Crystal::Repl::Compiler
     when "interpreter_fiber_swapcontext"
       accept_call_args(node)
       interpreter_fiber_swapcontext(node: node)
+    when "interpreter_fiber_resumable"
+      accept_call_args(node)
+      interpreter_fiber_resumable(node: node)
     when "interpreter_intrinsics_memcpy"
       accept_call_args(node)
       interpreter_intrinsics_memcpy(node: node)
@@ -552,6 +555,12 @@ class Crystal::Repl::Compiler
     when "interpreter_libm_floor_f64"
       accept_call_args(node)
       libm_floor_f64 node: node
+    when "interpreter_libm_fma_f32"
+      accept_call_args(node)
+      libm_fma_f32 node: node
+    when "interpreter_libm_fma_f64"
+      accept_call_args(node)
+      libm_fma_f64 node: node
     when "interpreter_libm_log_f32"
       accept_call_args(node)
       libm_log_f32 node: node
