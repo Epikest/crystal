@@ -122,7 +122,7 @@ jobs:
           bin/crystal.bat env
           # TODO: the 1.11.2 compiler only understands `-Dpreview_dll`; remove this once the
           # base compiler is updated
-          make -f Makefile.win -B FLAGS=-Dpreview_dll ${{ inputs.release && 'release=1 interpreter=1' || 'interpreter=1' }}
+          make -f Makefile.win -B FLAGS=-Dpreview_dll ${{ inputs.release && 'release=1 interpreter=1 interpreter=1' || 'interpreter=1interpreter=1' }}
           # TODO: 1.11.2 comes with LLVM 17's DLL and copies it to the output directory, but a
           # dynamically linked compiler requires LLVM 18, so we must overwrite it; remove this
           # line once the base compiler is updated
