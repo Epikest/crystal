@@ -231,6 +231,34 @@ jobs:
           cmake --build . --config Release
           cmake "-DCMAKE_INSTALL_PREFIX=$(pwd)\..\llvm" -P cmake_install.cmake
 
+  x86_64-windows-llvm-dlls:
+    if: ${{ needs.setup.outputs.current-release != needs.setup.outputs.release }}
+    runs-on: windows-2022
+    needs: [setup]
+    steps:
+      - name: Disable CRLF line ending substitution
+        run: |
+          git config --global core.autocrlf false
+
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+
+      - name: Download Crystal source
+        uses: actions/checkout@v4
+
+      - name: Cache LLVM
+        id: cache-llvm-dlls
+        uses: actions/cache@v4
+        with:
+          path: |
+            libs/llvm_VERSION
+            libs/llvm-dynamic.lib
+            dlls/LLVM-C.dll
+          key: llvm-dlls-${{ env.CI_LLVM_VERSION }}-${{ hashFiles('etc/win-ci/build-llvm.ps1') }}-msvc
+      - name: Build LLVM
+        if: steps.cache-llvm-dlls.outputs.cache-hit != 'true'
+        run: .\etc\win-ci\build-llvm.ps1 -BuildTree deps\llvm -Version ${{ env.CI_LLVM_VERSION }} -TargetsToBuild X86,AArch64 -Dynamic
+
   # x86_64-windows:
   #   needs: [x86_64-windows-libs, x86_64-windows-dlls, x86_64-windows-llvm]
   #   uses: ./.github/workflows/win_build_portable.yml
