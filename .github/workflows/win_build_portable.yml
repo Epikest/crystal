@@ -126,7 +126,7 @@ jobs:
           # TODO: 1.11.2 comes with LLVM 17's DLL and copies it to the output directory, but a
           # dynamically linked compiler requires LLVM 18, so we must overwrite it; remove this
           # line once the base compiler is updated
-          cp dlls/LLVM-C.dll .build/
+        #   cp dlls/LLVM-C.dll .build/
 
       - name: Download shards release
         uses: actions/checkout@v4
