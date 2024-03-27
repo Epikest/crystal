@@ -107,7 +107,7 @@ jobs:
             libs/llvm-dynamic.lib
             dlls/LLVM-C.dll
           key: llvm-dlls-${{ inputs.llvm_version }}-${{ hashFiles('etc/win-ci/build-llvm.ps1') }}-msvc
-          fail-on-cache-miss: true
+          fail-on-cache-miss: false
 
       - name: Set up environment
         run: |
